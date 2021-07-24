@@ -1,75 +1,80 @@
 
 import './App.css';
+import useContentful from './hooks/use-contentful.js';
 
+  var query =
+ `
+query {
+  postCollection {
+    items {
+      sys {
+        id
+      }
+      title
+      subtitle
+      slug
+      image {
+        title
+        description
+        contentType
+        fileName
+        size
+        url(transform: {
+          height: 300
+          width: 300
+        })
+        width
+        height
+      }
+      content {
+        json
+      }
+      contentfulMetadata {
+        tags {
+          id
+        }
+      }
+    }
+  }
+}  
+ `;
 
-const {REACT_APP_SPACE_TOKEN, REACT_APP_ACCESS_TOKEN} = process.env;
 
 function App() {
 
+  let {data, errors} = useContentful(query);
+  console.log(errors);
+  if (errors) return (
 
-  fetch(`https://graphql.contentful.com/content/v1/spaces/${REACT_APP_SPACE_TOKEN}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${REACT_APP_ACCESS_TOKEN}`
-    },
-    body: JSON.stringify({
-      query: `
-        query {
+    <span style={{color: "red"}}>
+      {errors.map((error) => error.message).join(",")}
+    </span>
 
-          post(id: "5WH0joUHPCaC9gk3Hzpq3f") {
-            title
-            subtitle
-            slug
-          }
-  
-          assetCollection  {
-            items  {
-              title
-              description
-              fileName
-            }
-         }
-  
-          postCollection {
-            items {
-              title
-              slug
-              contentfulMetadata {
-                tags {
-                  id
-                }
-              }
-              content{
-                json
-              }
-            }
-          }
-        }    
-      `
-    })
-  })
-    .then((res) => res.json())
-    .then((result) => console.log(result));
+  );
 
-
-
+  if (!data) return <span> Loading ... </span>
+console.log(data);
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+        <body>
+          <div>
+            {data.postCollection.items.map((article, index) => (
+                <li>
+                    <a href="{article.slug}"><div className="article" style={{
+                        height: 300,
+                        width: 300,
+                        backgroundImage: `url(${article.image.url})`
+                    }}>
+                    </div></a>
+                    <br/>
+                    <br/>
+                    <a href="{article.slug}"><span className="button-51" role="button">{article.title}</span></a>
+                    <br/>
+                    <br/>
+                     -------------------------------------------------------------------
+                </li>
+            ))}
+          </div>
+        </body>
   );
 }
 
