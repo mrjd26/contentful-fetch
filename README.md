@@ -1,3 +1,5 @@
+![local development](contentful-blog.gif)
+
 I'm building a blog to learn React
 
 I'm using Contentful for publishing/cms/admin
