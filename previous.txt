@@ -1,0 +1,23 @@
+  {/*
+        <body>
+          <div>
+              <ol>
+            {data.postCollection.items.map((article, index) => (
+                <li>
+                    <a href="{article.slug}">
+                        <div className="article" style={{
+                          float: "left",
+                          height: 350,
+                          width: 350,
+                          backgroundImage: `url(${article.image.url})`
+                          }}>
+                          <span className="button-51" role="button">{article.title}</span>
+                        </div>
+                    </a>
+                </li>
+
+            ))}
+              </ol>
+          </div>
+        </body>
+*/}
