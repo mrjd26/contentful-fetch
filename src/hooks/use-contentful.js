@@ -50,7 +50,6 @@ function useContentful(query, variables) {
     }, 1500);
 
   }, [query]);
-  console.log('23', data,errors);
   return {data, errors}
 }
 

@@ -1,4 +1,5 @@
 import  React from 'react';
+import { useState } from 'react';
 import './App.css';
 import useContentful from './hooks/use-contentful.js';
 import { AppBar, Button, Card, CardActions, CardContent, CardMedia, CircularProgress, CssBaseline, Grid, Toolbar, Typography, Container} from "@material-ui/core";
@@ -184,6 +185,8 @@ function About() {
 }
 
 function Template() {
+    const [imgSrc, setImgSrc] = useState("");
+
     let { article } = useParams();
 
     let query = `
@@ -196,6 +199,13 @@ function Template() {
           }
           slug
           title
+          image {
+            url(transform: {
+                         
+                           resizeStrategy: SCALE width:300
+                         
+                       })
+          }
           subtitle
           content {
             json
@@ -228,7 +238,7 @@ function Template() {
   const variables = {"variable_name": article};
   let {data, errors} = useContentful(query, variables) ;
 
-    const BlockQuote = ({quoteText, quoter}) => {
+    {/*const BlockQuote = ({quoteText, quoter}) => {
       return (
         <blockquote>
           {quoteText}
@@ -237,7 +247,7 @@ function Template() {
           </footer>
         </blockquote>
       )
-    }
+    */}
 
     const richTextOptions = {
         renderNode: {
@@ -265,19 +275,25 @@ function Template() {
               </Toolbar>
            </AppBar>
 
+
+
+
+
           <div className={classes.heroContent}>
              <Container maxWidth="sm">
-                 <Typography component="div" style={{backgroundColor: '#cfe8fc'}} >
-                   { data ? (
-                     <div>{
-                      documentToReactComponents(data.postCollection.items[0].content.json, richTextOptions)
-                     } </div>
-                       ) : (
-                     <p>`...Loading {article}`
-                       <CircularProgress/>
-                     </p>
 
-                       )}
+                 <Typography component="div" style={{backgroundColor: '#cfe8fc'}} >
+                     { data ? (
+                     <div>
+                             <img id="top-image" src={data.postCollection.items[0].image.url} />
+                           { documentToReactComponents(data.postCollection.items[0].content.json, richTextOptions)}
+                     </div>
+                             ) : (
+                           <p>`...Loading {article}`
+                             <CircularProgress/>
+                           </p>
+                           )
+                     }
                  </Typography>
              </Container>
           </div>
