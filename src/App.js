@@ -1,7 +1,7 @@
 import  React from 'react';
 import './App.css';
 import useContentful from './hooks/use-contentful.js';
-import { AppBar, Button, Card, CardActions, CardContent, CardMedia, CssBaseline, Grid, Toolbar, Typography, Container} from "@material-ui/core";
+import { AppBar, Button, Card, CardActions, CardContent, CardMedia, CircularProgress, CssBaseline, Grid, Toolbar, Typography, Container} from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import {
     BrowserRouter as Router,
@@ -10,6 +10,7 @@ import {
     Link,
     useParams
 } from "react-router-dom";
+import { BLOCKS } from '@contentful/rich-text-types';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
    const classes = makeStyles((theme) => ({
        icon: {
@@ -82,7 +83,9 @@ function Home() {
   let {data, errors} = useContentful(query) ;
 
   if (!data) {
-      return <span> Loading ... </span>
+      return <span> Loading ...
+        <CircularProgress/>
+      </span>
   }   else {
 
       return (
@@ -185,7 +188,7 @@ function Template() {
 
     let query = `
     query($variable_name: String) {
-      postCollection(where:{slug:$variable_name}) {
+      postCollection(limit:10, where:{slug:$variable_name}) {
         items {
           sys {
             id
@@ -196,6 +199,20 @@ function Template() {
           subtitle
           content {
             json
+            links {
+                      assets {
+                        block {
+                          title
+                          description
+                          contentType
+                          fileName
+                          size
+                          url
+                          width
+                          height
+                        }
+                      }
+                    }     
           }
           contentfulMetadata {
             tags {
@@ -207,8 +224,32 @@ function Template() {
       }
     }
     `
-    const variables = {"variable_name": article};
-    let {data, errors} = useContentful(query, variables) ;
+
+  const variables = {"variable_name": article};
+  let {data, errors} = useContentful(query, variables) ;
+
+    const BlockQuote = ({quoteText, quoter}) => {
+      return (
+        <blockquote>
+          {quoteText}
+          <footer>
+            <cite>{quoter}</cite>
+          </footer>
+        </blockquote>
+      )
+    }
+
+    const richTextOptions = {
+        renderNode: {
+            [BLOCKS.EMBEDDED_ASSET]: (node) => {
+                if(data.postCollection.items[0].content.links.assets.block[0].url)    {
+                        return <img src={data.postCollection.items[0].content.links.assets.block[0].url}/>
+                }else{
+                        return <span style={{backgroundColor: 'red', color: 'white'}}> Embedded asset </span>
+                }
+            }
+        }
+    }
 
     return (
         <React.Fragment>
@@ -229,10 +270,13 @@ function Template() {
                  <Typography component="div" style={{backgroundColor: '#cfe8fc'}} >
                    { data ? (
                      <div>{
-                      documentToReactComponents(data.postCollection.items[0].content.json)
+                      documentToReactComponents(data.postCollection.items[0].content.json, richTextOptions)
                      } </div>
                        ) : (
-                     <p>`...Loading {article}`</p>
+                     <p>`...Loading {article}`
+                       <CircularProgress/>
+                     </p>
+
                        )}
                  </Typography>
              </Container>
