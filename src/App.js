@@ -139,10 +139,10 @@ function Home() {
                                       </Link>
 
                                       <CardContent className={classes.cardContent}>
-                                          <Typography gutterBottom variant="body2">
+                                          <Typography gutterBottom variant="h5">
                                               {article.title}
                                           </Typography>
-                                          <Typography variant="caption">
+                                          <Typography variant="subtitle1">
                                               {article.subtitle}
                                           </Typography>
                                       </CardContent>
@@ -181,11 +181,15 @@ function Home() {
 
 function About() {
     console.log('hello,Im out and about')
-    return <h1> This is all about me baby</h1>
+    return (
+        <>
+          <h1> This Website</h1>
+          <p> This project was created to give me some expereince with React and GraphQL</p>
+        </>
+           )
 }
 
 function Template() {
-    const [imgSrc, setImgSrc] = useState("");
 
     let { article } = useParams();
 
@@ -238,22 +242,15 @@ function Template() {
   const variables = {"variable_name": article};
   let {data, errors} = useContentful(query, variables) ;
 
-    {/*const BlockQuote = ({quoteText, quoter}) => {
-      return (
-        <blockquote>
-          {quoteText}
-          <footer>
-            <cite>{quoter}</cite>
-          </footer>
-        </blockquote>
-      )
-    */}
-
+  var count = 0;
+  console.log(count);
     const richTextOptions = {
         renderNode: {
             [BLOCKS.EMBEDDED_ASSET]: (node) => {
-                if(data.postCollection.items[0].content.links.assets.block[0].url)    {
-                        return <img src={data.postCollection.items[0].content.links.assets.block[0].url}/>
+            if (node.nodeType === "embedded-asset-block") {
+                    count++
+                    return <img src={data.postCollection.items[0].content.links.assets.block[count-1].url}/>
+
                 }else{
                         return <span style={{backgroundColor: 'red', color: 'white'}}> Embedded asset </span>
                 }
@@ -261,7 +258,14 @@ function Template() {
         }
     }
 
+    const imageStyle = {
+        display: "block",
+        marginLeft: "auto",
+        marginRight: "auto"
+    };
+
     return (
+
         <React.Fragment>
           <CssBaseline/>
           <AppBar position="relative">
@@ -276,22 +280,19 @@ function Template() {
            </AppBar>
 
 
-
-
-
           <div className={classes.heroContent}>
              <Container maxWidth="sm">
 
                  <Typography component="div" style={{backgroundColor: '#cfe8fc'}} >
                      { data ? (
                      <div>
-                             <img id="top-image" src={data.postCollection.items[0].image.url} />
+                             <img id="top-image" src={data.postCollection.items[0].image.url} style={imageStyle}/>
                            { documentToReactComponents(data.postCollection.items[0].content.json, richTextOptions)}
                      </div>
                              ) : (
-                           <p>`...Loading {article}`
+                           <div>`...Loading {article}`
                              <CircularProgress/>
-                           </p>
+                           </div>
                            )
                      }
                  </Typography>
