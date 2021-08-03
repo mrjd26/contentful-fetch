@@ -243,26 +243,26 @@ function Template() {
   let {data, errors} = useContentful(query, variables) ;
 
   var count = 0;
-  console.log(count);
+
+  const imageStyle = {
+    display: "block",
+    marginLeft: "auto",
+    marginRight: "auto"
+  };
+
     const richTextOptions = {
         renderNode: {
             [BLOCKS.EMBEDDED_ASSET]: (node) => {
-            if (node.nodeType === "embedded-asset-block") {
+                if (node.nodeType === "embedded-asset-block") {
                     count++
-                    return <img src={data.postCollection.items[0].content.links.assets.block[count-1].url}/>
+                    return <img src={data.postCollection.items[0].content.links.assets.block[count - 1].url} style={imageStyle}/>
 
-                }else{
-                        return <span style={{backgroundColor: 'red', color: 'white'}}> Embedded asset </span>
+                } else {
+                    return <span style={{backgroundColor: 'red', color: 'white'}}> Embedded asset </span>
                 }
             }
         }
     }
-
-    const imageStyle = {
-        display: "block",
-        marginLeft: "auto",
-        marginRight: "auto"
-    };
 
     return (
 
