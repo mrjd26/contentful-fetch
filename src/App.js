@@ -1,5 +1,4 @@
 import  React from 'react';
-import { useState } from 'react';
 import './App.css';
 import useContentful from './hooks/use-contentful.js';
 import { AppBar, Button, Card, CardActions, CardContent, CardMedia, CircularProgress, CssBaseline, Grid, Toolbar, Typography, Container} from "@material-ui/core";
@@ -151,7 +150,7 @@ function Home() {
                                               {cleanTimestamp(article.sys.firstPublishedAt)}
                                           </Button>
                                           <Button size="small" color="primary">
-                                              {article.contentfulMetadata.tags.name}
+                                              {article.contentfulMetadata.tags !== 0 ? article.contentfulMetadata.tags[0].id:''}
                                           </Button>
                                       </CardActions>
                                   </Card>
@@ -185,6 +184,10 @@ function About() {
         <>
           <h1> This Website</h1>
           <p> This project was created to give me some expereince with React and GraphQL</p>
+          <p> It uses Contentful's cloud CMS for publish / admin of articles</p>
+          <p> I then have a React App running on Google Cloud that pulls in the articles and media from
+          Contentful's graphQL API when a user browses to the site</p>
+          <img alt="contentful publishing" src="https://images.ctfassets.net/7eb2etyb77te/1Sr24KjKh3zJ2ThZoQtSEN/37452ca78ff7d9147b6943c17f359743/Contentful-publish.png"/>
         </>
            )
 }
@@ -254,8 +257,9 @@ function Template() {
         renderNode: {
             [BLOCKS.EMBEDDED_ASSET]: (node) => {
                 if (node.nodeType === "embedded-asset-block") {
-                    count++
-                    return <img src={data.postCollection.items[0].content.links.assets.block[count - 1].url} style={imageStyle}/>
+                    console.log(count);
+                    count++;
+   return <img src={data.postCollection.items[0].content.links.assets.block[count - 1].url} alt={data.postCollection.items[0].content.links.assets.block[count - 1].description} style={imageStyle}/>
 
                 } else {
                     return <span style={{backgroundColor: 'red', color: 'white'}}> Embedded asset </span>
@@ -286,7 +290,7 @@ function Template() {
                  <Typography component="div" style={{backgroundColor: '#cfe8fc'}} >
                      { data ? (
                      <div>
-                             <img id="top-image" src={data.postCollection.items[0].image.url} style={imageStyle}/>
+                             <img id="top-image" alt={data.postCollection.items[0].image.description} src={data.postCollection.items[0].image.url} style={imageStyle}/>
                            { documentToReactComponents(data.postCollection.items[0].content.json, richTextOptions)}
                      </div>
                              ) : (
@@ -296,6 +300,7 @@ function Template() {
                            )
                      }
                  </Typography>
+
              </Container>
           </div>
         </React.Fragment>
