@@ -6,6 +6,11 @@ import { BLOCKS } from '@contentful/rich-text-types';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { Link, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import ReactGA from 'react-ga';
+
+
+ReactGA.initialize('UA-84755207-2');
+ReactGA.pageview(window.location.pathname + window.location.search);
 
 const classes = makeStyles((theme) => ({
     icon: {
