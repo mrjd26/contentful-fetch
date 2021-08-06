@@ -118,8 +118,8 @@ function Template() {
                          <img id="top-image" alt={data.postCollection.items[0].image.description}
                               src={data.postCollection.items[0].image.url}
                               style={imageStyle}
-                         />,
-                         {documentToReactComponents(data.postCollection.items[0].content.json, richTextOptions)},
+                         />
+                         {documentToReactComponents(data.postCollection.items[0].content.json, richTextOptions)}
                          <Helmet>
                              <title>{data.postCollection.items[0].title}</title>
                              <meta name="description" content={ "Title: " + data.postCollection.items[0].title} />

@@ -47,7 +47,7 @@ function useContentful(query, variables) {
     };
     setTimeout(() => {
       loadData();
-    }, 1500);
+    }, 0);
 
   }, [query]);
   return {data, errors}

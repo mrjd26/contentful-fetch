@@ -91,8 +91,8 @@ function Home() {
       return (
           <React.Fragment>
               <Helmet>
-                  <title>{data.postCollection.items[0].title}</title>
-                  <meta name="description" content={ "Title: " + data.postCollection.items[0].title} />
+                  <title>Mike's Kitchen tips and travelling with kids</title>
+                  <meta name="description" content="Title: Kitchen tips, Title: Travelling with Kids" />
               </Helmet>
               <CssBaseline/>
               <AppBar position="relative">
