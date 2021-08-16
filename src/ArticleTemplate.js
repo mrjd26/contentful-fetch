@@ -8,7 +8,6 @@ import { Link, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import ReactGA from 'react-ga';
 
-
 ReactGA.initialize('UA-84755207-2');
 ReactGA.pageview(window.location.pathname + window.location.search);
 
@@ -86,11 +85,12 @@ function Template() {
         renderNode: {
             [BLOCKS.EMBEDDED_ASSET]: (node) => {
                 if (node.nodeType === "embedded-asset-block") {
-                    console.log(count);
+                    console.log(node);
                     count++;
                     return <img
                              src={data.postCollection.items[0].content.links.assets.block[count - 1].url}
                              alt={data.postCollection.items[0].content.links.assets.block[count - 1].description}
+                             id={data.postCollection.items[0].content.links.assets.block[count-1].title}
                              style={imageStyle}
                            />
 
@@ -127,7 +127,7 @@ function Template() {
                          {documentToReactComponents(data.postCollection.items[0].content.json, richTextOptions)}
                          <Helmet>
                              <title>{data.postCollection.items[0].title}</title>
-                             <meta name="description" content={ "Title: " + data.postCollection.items[0].title} />
+                             <meta name="description" content={ "Title: " + data.postCollection.items[0].title + "Subtitle: "+ data.postCollection.items[0].subtitle} />
                          </Helmet>
                      </div>
                              ) : (

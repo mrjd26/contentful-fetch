@@ -9,6 +9,7 @@ import {
     Switch,
     Route,
     Link,
+    useLocation
 } from "react-router-dom";
 import {Helmet} from 'react-helmet';
 
@@ -73,14 +74,59 @@ query {
   }
 }  
  `
+var variables = '';
 function cleanTimestamp(unix_ts) {
   let date = new Date(unix_ts);
   return date.toDateString();
 }
 
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
+
 function Home() {
 
-  let {data, errors} = useContentful(query) ;
+  let queryString = useQuery();
+  console.log(queryString.get("filter"));
+  let tag = queryString.get("filter");
+
+    if (tag != null) {
+        console.log('tag: ' + tag);
+      query = `
+query ($variable_name: String){
+  postCollection (limit:9,where:{contentfulMetadata:{tags:{id_contains_all:[$variable_name]}}}) {
+    items {
+      sys {
+        id
+        firstPublishedAt
+      }
+      title
+      subtitle
+      slug
+      image {
+        title
+        description
+        contentType
+        url
+      }
+      contentfulMetadata {
+        tags {
+          id
+          name
+        }
+      }
+    }
+  }
+}  
+ `
+        variables = {"variable_name":tag};
+  } else {
+      console.log("homepage");
+  }
+
+  let {data, errors} = useContentful(query, variables) ;
+
+    console.log(data);
 
   if (!data) {
       return <span> Loading ...
@@ -123,6 +169,7 @@ function Home() {
                   </div>
 
                   <Container className={classes.cardGrid} maxWidth="md">
+                      { tag!=null ? <Button>x{tag}</Button>:<p></p>}
                       {/* End hero unit */}
                       <Grid container spacing={4}>
                           {data.postCollection.items.map((article) => (
@@ -153,9 +200,11 @@ function Home() {
                                           <Button size="small" color="primary">
                                               {cleanTimestamp(article.sys.firstPublishedAt)}
                                           </Button>
-                                          <Button size="small" color="primary">
+                                          <Link to={`/?filter=${article.contentfulMetadata.tags[0].id}`}>
+                                            <Button size="small" color="primary">
                                               {article.contentfulMetadata.tags !== 0 ? article.contentfulMetadata.tags[0].id:''}
-                                          </Button>
+                                            </Button>
+                                          </Link>
                                       </CardActions>
                                   </Card>
                               </Grid>
@@ -186,6 +235,16 @@ function About() {
     console.log('hello,Im out and about')
     return (
         <>
+            <AppBar position="relative">
+                <Toolbar color="#cfe8fc">
+
+                    <Typography variant="body1" color="inherit" noWrap>
+                        <Link to="/">Home</Link>
+                        <Link style={{marginLeft: 55, color:"white"}} to="/about">About</Link>
+
+                    </Typography>
+                </Toolbar>
+            </AppBar>
           <h1> This Website</h1>
           <p> This project was created to give me some expereince with React and GraphQL</p>
           <p> It uses Contentful's cloud CMS for publish / admin of articles</p>
