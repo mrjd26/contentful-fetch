@@ -46,34 +46,8 @@ import {Helmet} from 'react-helmet';
        },
    }));
    
-var query =
- `
-query {
-  postCollection (limit:9) {
-    items {
-      sys {
-        id
-        firstPublishedAt
-      }
-      title
-      subtitle
-      slug
-      image {
-        title
-        description
-        contentType
-        url
-      }
-      contentfulMetadata {
-        tags {
-          id
-          name
-        }
-      }
-    }
-  }
-}  
- `
+var query = '';
+
 var variables = '';
 function cleanTimestamp(unix_ts) {
   let date = new Date(unix_ts);
@@ -121,7 +95,33 @@ query ($variable_name: String){
  `
         variables = {"variable_name":tag};
   } else {
-      console.log("homepage");
+      query = `
+query {
+  postCollection (limit:9) {
+    items {
+      sys {
+        id
+        firstPublishedAt
+      }
+      title
+      subtitle
+      slug
+      image {
+        title
+        description
+        contentType
+        url
+      }
+      contentfulMetadata {
+        tags {
+          id
+          name
+        }
+      }
+    }
+  }
+}  
+ `
   }
 
   let {data, errors} = useContentful(query, variables) ;
@@ -169,7 +169,7 @@ query ($variable_name: String){
                   </div>
 
                   <Container className={classes.cardGrid} maxWidth="md">
-                      { tag!=null ? <Button>x{tag}</Button>:<p></p>}
+                      { tag!=null ? <Button><Link to="/">x{tag}</Link></Button>:<p></p>}
                       {/* End hero unit */}
                       <Grid container spacing={4}>
                           {data.postCollection.items.map((article) => (
