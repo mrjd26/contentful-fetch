@@ -1,9 +1,10 @@
-![local development](contentful-blog.gif)
+![Mikes Blog](https://www.mike-jarvis.com)
 
-I'm building a blog to learn React
+I'm building a blog to learn React, GraphQL and to get more comfortable with JavaScript and Node.
 
-I'm using Contentful for publishing/cms/admin
+I decided to use a cloud CMS/admin for publishing called Contentful.
 
-I'm using node/create-react-app for the environment
+They have a graphQL api endpoint, so it was convenient for my purposes of learning GraphQL
 
-I'm learning GraphQL for the Contentful query
+and the html markdown and media upload satisfied my purposes of easy, manageable blog publishing
+

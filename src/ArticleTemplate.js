@@ -7,9 +7,12 @@ import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { Link, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import ReactGA from 'react-ga';
+import { DiscussionEmbed } from 'disqus-react';
 
 ReactGA.initialize('UA-84755207-2');
 ReactGA.pageview(window.location.pathname + window.location.search);
+
+const baseUrl = 'https://www.mike-jarvis.com/'
 
 const classes = makeStyles((theme) => ({
     icon: {
@@ -129,6 +132,17 @@ function Template() {
                              <title>{data.postCollection.items[0].title}</title>
                              <meta name="description" content={ "Title: " + data.postCollection.items[0].title + "Subtitle: "+ data.postCollection.items[0].subtitle} />
                          </Helmet>
+                         <DiscussionEmbed
+                             shortname='mike-jarvis'
+                             config={
+                                 {
+                                     url: baseUrl + data.postCollection.items[0].slug,
+                                     identifier: data.postCollection.items[0].id,
+                                     title: data.postCollection.items[0].title,
+                                     language: 'en' //e.g. for Traditional Chinese (Taiwan)
+                                 }
+                             }
+                         />
                      </div>
                              ) : (
                            <div>`...Loading {article}`
