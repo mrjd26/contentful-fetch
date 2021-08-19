@@ -1,4 +1,4 @@
-![Mikes Blog](https://www.mike-jarvis.com)
+https://www.mike-jarvis.com
 
 I'm building a blog to learn React, GraphQL and to get more comfortable with JavaScript and Node.
 

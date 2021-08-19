@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppBar, CircularProgress, CssBaseline, Toolbar, Typography, Container} from "@material-ui/core";
 import useContentful from './hooks/use-contentful.js';
+import CommentIcon from '@material-ui/icons/Comment';
 import { makeStyles } from '@material-ui/core/styles';
 import { BLOCKS } from '@contentful/rich-text-types';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
@@ -8,11 +9,17 @@ import { Link, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import ReactGA from 'react-ga';
 import { DiscussionEmbed } from 'disqus-react';
+import { HashLink } from 'react-router-hash-link'
 
 ReactGA.initialize('UA-84755207-2');
 ReactGA.pageview(window.location.pathname + window.location.search);
 
 const baseUrl = 'https://www.mike-jarvis.com/'
+
+function cleanTimestamp(unix_ts) {
+    let date = new Date(unix_ts);
+    return date.toDateString();
+}
 
 const classes = makeStyles((theme) => ({
     icon: {
@@ -88,7 +95,7 @@ function Template() {
         renderNode: {
             [BLOCKS.EMBEDDED_ASSET]: (node) => {
                 if (node.nodeType === "embedded-asset-block") {
-                    console.log(node);
+
                     count++;
                     return <img
                              src={data.postCollection.items[0].content.links.assets.block[count - 1].url}
@@ -127,6 +134,14 @@ function Template() {
                               src={data.postCollection.items[0].image.url}
                               style={imageStyle}
                          />
+                         <br/>
+                         <HashLink smooth to="#disqus_thread">
+                             <CommentIcon></CommentIcon>Comment
+                         </HashLink> {"           "}
+                         <span style={{marginLeft:20, fontSize:"0.75rem"}}>
+                             <em>{cleanTimestamp(data.postCollection.items[0].sys.firstPublishedAt)}</em>
+                         </span>
+
                          {documentToReactComponents(data.postCollection.items[0].content.json, richTextOptions)}
                          <Helmet>
                              <title>{data.postCollection.items[0].title}</title>
@@ -137,9 +152,9 @@ function Template() {
                              config={
                                  {
                                      url: baseUrl + data.postCollection.items[0].slug,
-                                     identifier: data.postCollection.items[0].id,
+                                     identifier: data.postCollection.items[0].sys.id,
                                      title: data.postCollection.items[0].title,
-                                     language: 'en' //e.g. for Traditional Chinese (Taiwan)
+                                     language: 'en'
                                  }
                              }
                          />
