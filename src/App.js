@@ -270,7 +270,7 @@ export const App = () => {
                 <About />
               </Route>
               <Route path="/:article">
-                  <Template />
+                  <Template/>
               </Route>
           </Switch>
         </Router>
